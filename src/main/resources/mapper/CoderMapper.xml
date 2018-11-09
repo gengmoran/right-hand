@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.misterfat.righthand.dao.CoderDao">
+	
+	<select id="findAll" parameterType="java.lang.String" resultType="com.misterfat.righthand.model.Coder">
+		select * from coder;
+	</select>
+	
+	<insert id="insert"  parameterType="com.misterfat.righthand.model.Coder" >
+		INSERT INTO `coder` (`id`, `name`, `sex`, `age`, `address`, `phone`) VALUES (#{id}, #{name}, #{sex}, #{age}, #{address}, #{phone});
+	</insert>
+</mapper>

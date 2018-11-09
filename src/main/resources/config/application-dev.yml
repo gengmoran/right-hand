@@ -1,0 +1,50 @@
+spring:
+  h2:
+    console:
+      path: /h2-console
+  application:
+    name: right-hand
+  datasource:
+    schema: classpath:db/h2/schema.sql
+    data: classpath:db/h2/data.sql
+    druid:
+      filters: config,stat,log4j
+      driver-class-name: org.h2.Driver
+      url: jdbc:h2:mem:test
+      username: 
+      password: 
+  resources:
+    static-locations:
+    - static
+  freemarker:
+    allow-request-override: false
+    allow-session-override: false
+    cache: false
+    charset: UTF-8
+    check-template-location: true
+    content-type: text/html
+    enabled: true
+    expose-request-attributes: false
+    expose-session-attributes: false
+    expose-spring-macro-helpers: true
+    prefer-file-system-access: false
+    suffix: .html
+    template-loader-path: classpath:/templates/
+    request-context-attribute: request
+swagger:
+  enabled: true
+  title: 右手-接口文档
+  version: 1.0
+  description: 2018年11月08日
+  base-path:
+  - /api/**
+mybatis:
+  type-aliases-package: com.misterfat.righthand.model
+  mapper-locations: classpath:mapper/*.xml
+logging:
+  file: /data/logs/right-hand.log
+  level:
+    root: error
+    com.misterfat.righthand: info
+server:
+  port: 54199
