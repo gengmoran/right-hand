@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.misterfat</groupId>
-	<artifactId>hbase-test</artifactId>
+	<artifactId>right-hand</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>hbase-test</name>
-	<description>hbase test</description>
+	<name>right-hand</name>
+	<description>right hand</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
