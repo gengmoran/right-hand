@@ -36,21 +36,22 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.alibaba.fastjson.JSON;
+import com.misterfat.framework.exception.GenericException;
 
 public class RequestUtil {
 
 	private final static Logger logger = LoggerFactory.getLogger(RequestUtil.class);
 
-	public final static String METHOD_GET = "GET";
-	public final static String METHOD_POST = "POST";
-	public final static String METHOD_DELETE = "DELETE";
-	public final static String METHOD_PUT = "PUT";
-	public final static String METHOD_PATCH = "PATCH";
-	public final static String APPLICATION_JSON = "application/json";
-	public final static Map<String, String> DEFAULT_JSON_HEADERS = new HashMap<String, String>();
-	public final static Map<String, String> DEFAULT_FORM_HEADERS = new HashMap<String, String>();
+	protected final static String METHOD_GET = "GET";
+	protected final static String METHOD_POST = "POST";
+	protected final static String METHOD_DELETE = "DELETE";
+	protected final static String METHOD_PUT = "PUT";
+	protected final static String METHOD_PATCH = "PATCH";
+	protected final static String APPLICATION_JSON = "application/json";
+	protected final static Map<String, String> DEFAULT_JSON_HEADERS = new HashMap<String, String>();
+	protected final static Map<String, String> DEFAULT_FORM_HEADERS = new HashMap<String, String>();
 
-	public static final int BUFFER_SIZE = 1024;
+	protected static final int BUFFER_SIZE = 1024;
 
 	static {
 		// DEFAULT_JSON_HEADERS.put("Accept", APPLICATION_JSON);
@@ -175,14 +176,12 @@ public class RequestUtil {
 		map.put("RemoteHost", request.getRemoteHost());
 		map.put("RemotePort", request.getRemotePort());
 		map.put("RemoteUser", request.getRemoteUser());
-		map.put("RequestedSessionId", request.getRequestedSessionId());
 		map.put("RequestURI", request.getRequestURI());
 		map.put("Scheme", request.getScheme());
 		map.put("ServerName", request.getServerName());
 		map.put("ServerPort", request.getServerPort());
 		map.put("ServletPath", request.getServletPath());
 		map.put("isRequestedSessionIdFromCookie", request.isRequestedSessionIdFromCookie());
-		map.put("isRequestedSessionIdFromURL", request.isRequestedSessionIdFromURL());
 		map.put("isRequestedSessionIdFromURL", request.isRequestedSessionIdFromURL());
 		map.put("isRequestedSessionIdValid", request.isRequestedSessionIdValid());
 		map.put("isSecure", request.isSecure());
@@ -210,14 +209,12 @@ public class RequestUtil {
 	 * @update:[变更日期YYYY-MM-DD][更改人姓名][变更描述]
 	 */
 	public static HttpServletRequest getHttpServletRequest() {
-		try {
-			ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-			HttpServletRequest req = sra.getRequest();
-			return req;
-		} catch (Exception e) {
-			logger.error("{}", e);
-			return null;
+		ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest req = sra.getRequest();
+		if (req == null) {
+			throw new GenericException("request is null");
 		}
+		return req;
 	}
 
 	/**
@@ -226,12 +223,7 @@ public class RequestUtil {
 	 * @return
 	 */
 	public static HttpSession getHttpSession() {
-		try {
-			return getHttpServletRequest().getSession();
-		} catch (Exception e) {
-			logger.error("{}", e);
-			return null;
-		}
+		return getHttpServletRequest().getSession();
 	}
 
 	/**
@@ -625,6 +617,9 @@ public class RequestUtil {
 	 * @update:[变更日期YYYY-MM-DD][更改人姓名][变更描述]
 	 */
 	public static String buildGetUrl(String url, Map<String, Object> datas) {
+		if (!StringUtils.hasText(url)) {
+			throw new GenericException("url can not be null");
+		}
 		if (url.contains("?")) {
 			return url + "&" + httpBuildQuery(datas);
 		}

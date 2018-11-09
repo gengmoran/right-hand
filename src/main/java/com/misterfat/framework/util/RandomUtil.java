@@ -40,7 +40,7 @@ public class RandomUtil {
 	public static Integer randomInteger(int len) {
 		int min = 0;
 		if (len > 1) {
-			min = (int) Math.pow(10, len - 1);
+			min = (int) Math.pow(10, len - 1.0);
 		}
 		int max = (int) Math.pow(10, len) - 1;
 		return randomInteger(min, max);

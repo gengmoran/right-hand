@@ -6,7 +6,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ListUtil {
+
+	private final static Logger logger = LoggerFactory.getLogger(ListUtil.class);
 
 	/*
 	 * 私有构造方法
@@ -122,7 +127,7 @@ public class ListUtil {
 				resultList.add(object);
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("{}", e);
 				throw new RuntimeException("获取字段" + columnName + "失败", e);
 			}
 		}

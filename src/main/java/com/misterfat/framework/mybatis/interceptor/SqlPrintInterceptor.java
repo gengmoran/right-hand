@@ -41,14 +41,15 @@ public class SqlPrintInterceptor implements Interceptor {
 
 	private static Log logger = LogFactory.getLog(SqlPrintInterceptor.class);
 
-	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static final String DAFAULT_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
 	@Override
 	public Object intercept(Invocation invocation) throws Throwable {
-		MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
+		Object[] args = invocation.getArgs();
+		MappedStatement mappedStatement = (MappedStatement) args[0];
 		Object parameterObject = null;
-		if (invocation.getArgs().length > 1) {
-			parameterObject = invocation.getArgs()[1];
+		if (args.length > 1) {
+			parameterObject = args[1];
 		}
 
 		long start = System.currentTimeMillis();
@@ -57,6 +58,9 @@ public class SqlPrintInterceptor implements Interceptor {
 
 		String statementId = mappedStatement.getId();
 		BoundSql boundSql = mappedStatement.getBoundSql(parameterObject);
+		if (args.length == 6) {
+			boundSql = (BoundSql) args[5];
+		}
 		Configuration configuration = mappedStatement.getConfiguration();
 		String sql = getSql(boundSql, parameterObject, configuration);
 
@@ -80,6 +84,7 @@ public class SqlPrintInterceptor implements Interceptor {
 
 	@Override
 	public void setProperties(Properties properties) {
+		logger.debug(properties);
 	}
 
 	private String getSql(BoundSql boundSql, Object parameterObject, Configuration configuration) {
@@ -115,7 +120,8 @@ public class SqlPrintInterceptor implements Interceptor {
 			if (propertyValue instanceof String) {
 				result = "'" + propertyValue + "'";
 			} else if (propertyValue instanceof Date) {
-				result = "'" + DATE_FORMAT.format(propertyValue) + "'";
+				DateFormat dateFormater = new SimpleDateFormat(DAFAULT_DATE_PATTERN);
+				result = "'" + dateFormater.format(propertyValue) + "'";
 			} else {
 				result = propertyValue.toString();
 			}

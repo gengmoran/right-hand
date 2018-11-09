@@ -16,43 +16,41 @@ import hirondelle.date4j.DateTime;
 
 public class DateUtil {
 
-	public static final String DEFAULT_FULLYEAR_FORMAT = "yyyy";
+	protected static final String DEFAULT_FULLYEAR_FORMAT = "yyyy";
 
-	public static final String DEFAULT_YEARMONTH_FORMAT = "yyyy-MM";
+	protected static final String DEFAULT_YEARMONTH_FORMAT = "yyyy-MM";
 
 	/**
 	 * 缺省的日期显示格式： yyyy-MM-dd
 	 */
-	public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
+	protected static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
 	/**
 	 * 缺省的时间显示格式： yyyy-MM-dd
 	 */
-	public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
+	protected static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
 
 	/**
 	 * 缺省的日期时间显示格式：yyyy-MM-dd HH:mm:ss
 	 */
-	public static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	protected static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-	public static final String DATE_HOUR_MINUTE = "yyyy-MM-dd HH:mm";;
+	protected static final String DATE_HOUR_MINUTE = "yyyy-MM-dd HH:mm";;
 
-	public static final String[] WEEKDAY = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+	protected static final String[] WEEKDAY = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
 
 	/**
 	 * 缺省的时区GMT+8
 	 */
-	public static final String DEFAULT_TIMEZONE_ID = "GMT+8";
+	static final String DEFAULT_TIMEZONE_ID = "GMT+8";
 
-	public static final TimeZone DEFAULT_TIMEZONE = TimeZone.getTimeZone(DEFAULT_TIMEZONE_ID);
+	static final TimeZone DEFAULT_TIMEZONE = TimeZone.getTimeZone(DEFAULT_TIMEZONE_ID);
 
 	/**
 	 * 私有构造方法，禁止对该类进行实例化
 	 */
 	private DateUtil() {
 	}
-
-	private static SimpleDateFormat formater = new SimpleDateFormat();
 
 	public static Date toDate(DateTime dateTime) {
 		Date date = new Date(dateTime.getMilliseconds(DEFAULT_TIMEZONE));
@@ -120,6 +118,7 @@ public class DateUtil {
 		if (null == pattern || "".equals(pattern)) {
 			pattern = DEFAULT_DATE_FORMAT;
 		}
+		SimpleDateFormat formater = new SimpleDateFormat();
 		formater.applyPattern(pattern);
 		return formater.format(date);
 	}
@@ -167,6 +166,7 @@ public class DateUtil {
 		if (null == pattern || "".equals(pattern)) {
 			pattern = DEFAULT_DATETIME_FORMAT;
 		}
+		SimpleDateFormat formater = new SimpleDateFormat();
 		formater.applyPattern(pattern);
 		return formater.format(date);
 	}
@@ -559,6 +559,7 @@ public class DateUtil {
 		}
 
 		try {
+			SimpleDateFormat formater = new SimpleDateFormat();
 			formater.applyPattern(pattern);
 			date = formater.parse(datestr);
 		} catch (ParseException e) {

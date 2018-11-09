@@ -12,11 +12,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class FileUtil {
 
-	public static final int BUFFER_SIZE = 4096;
+	private final static Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
-	public final static Map<String, String> MIMES = new HashMap<String, String>();
+	protected static final int BUFFER_SIZE = 4096;
+
+	protected final static Map<String, String> MIMES = new HashMap<String, String>();
 
 	static {
 		MIMES.put("323", "text/h323");
@@ -239,13 +244,15 @@ public class FileUtil {
 			BigInteger bigInt = new BigInteger(1, digest.digest());
 			return bigInt.toString(16);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		} finally {
 			try {
-				in.close();
+				if (in != null) {
+					in.close();
+					in = null;
+				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.warn("{}", e);
 			}
 		}
 
@@ -281,13 +288,15 @@ public class FileUtil {
 			BigInteger bigInt = new BigInteger(1, digest.digest());
 			return bigInt.toString(16);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		} finally {
 			try {
-				in.close();
+				if (in != null) {
+					in.close();
+					in = null;
+				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.warn("{}", e);
 			}
 		}
 	}
@@ -311,7 +320,10 @@ public class FileUtil {
 		if (!file.getParentFile().exists()) {
 			createDir(file.getParent());
 		}
-		file.createNewFile();
+		boolean createNewFile = file.createNewFile();
+		if (!createNewFile) {
+			throw new RuntimeException("create file fail");
+		}
 	}
 
 	/**
@@ -410,7 +422,9 @@ public class FileUtil {
 			if (bufferedReader != null) {
 				try {
 					bufferedReader.close();
+					bufferedReader = null;
 				} catch (IOException e) {
+					logger.warn("{}", e);
 				}
 			}
 		}
@@ -421,17 +435,9 @@ public class FileUtil {
 	public static enum FileType {
 		IMAGE("image"), VIDEO("video"), TEXT("text"), AUDIO("audio");
 
-		private String fileType;
+		String fileType;
 
-		private FileType(String fileType) {
-			this.fileType = fileType;
-		}
-
-		public String getFileType() {
-			return fileType;
-		}
-
-		public void setFileType(String fileType) {
+		FileType(String fileType) {
 			this.fileType = fileType;
 		}
 

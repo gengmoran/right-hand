@@ -166,10 +166,8 @@ public class PageList<T> {
 		this.orderBy = page.getOrderBy();
 		this.reasonable = page.getReasonable();
 		this.pageSizeZero = page.getPageSizeZero();
-		if (list != null) {
+		if (list != null && !list.isEmpty()) {
 			this.rows = new ArrayList<T>();
-		}
-		if (!list.isEmpty()) {
 			this.rows.addAll(list);
 		}
 	}

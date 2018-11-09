@@ -14,12 +14,16 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.misterfat.framework.exception.GenericException;
 
 public class MultipartFileUtil {
+
+	private final static Logger logger = LoggerFactory.getLogger(MultipartFileUtil.class);
 
 	/**
 	 * 下载文件
@@ -36,12 +40,10 @@ public class MultipartFileUtil {
 		if (!StringUtils.hasText(fileName)) {
 			fileName = "无标题";
 		}
-		/*
-		 * fileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
-		 * response.setHeader("Content-Disposition", "attachment; filename=" +
-		 * fileName);
-		 */
 		HttpServletRequest request = RequestUtil.getHttpServletRequest();
+		if (request == null) {
+			throw new GenericException("request is null");
+		}
 		response.setHeader("Content-Disposition", "attachment;filename="
 				+ DownloadUtil.encodeDownloadFilename(fileName, request.getHeader("user-agent")));
 
@@ -153,7 +155,7 @@ public class MultipartFileUtil {
 			File uploadedFile = new File(savePath, newFileName);
 			file.transferTo(uploadedFile);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("{}", e);
 			throw new GenericException("上传文件失败。");
 		}
 
